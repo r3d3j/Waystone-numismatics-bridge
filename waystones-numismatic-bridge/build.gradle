@@ -1,0 +1,137 @@
+// =============================================================================
+//  build.gradle — Waystones Coin Cost Mod
+//  Minecraft 1.21.1 | NeoForge 21.1.x | Sinytra Connector
+// =============================================================================
+plugins {
+    id 'java'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
+}
+
+version = '1.0.0'
+group   = 'net.example.waystonecoins'
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+// ---------------------------------------------------------------------------
+//  Minecraft / NeoForge target
+// ---------------------------------------------------------------------------
+minecraft {
+    version = "1.21.1-21.1.172"
+}
+
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+    }
+
+    client {
+        client()
+    }
+
+    server {
+        server()
+        programArgument '--nogui'
+    }
+}
+
+// ---------------------------------------------------------------------------
+//  Repositories
+// ---------------------------------------------------------------------------
+repositories {
+    // Twelve Iterations — Waystones + Balm
+    maven {
+        name = "TwelveIterations"
+        url  = "https://maven.twelveiterations.com/repository/maven-public/"
+        content { includeGroup "net.blay09.mods" }
+    }
+
+    // Wisp Forest Maven — oωo-lib (Numismatic Overhaul dependency)
+    maven {
+        name = "WispForest"
+        url  = "https://maven.wispforest.io/releases/"
+        content { includeGroup "io.wispforest" }
+    }
+
+    // Sinytra Maven — Sinytra Connector + Forgified Fabric API
+    maven {
+        name = "Sinytra"
+        url  = "https://maven.sinytra.org/"
+        content {
+            includeGroup "org.sinytra"
+            includeGroup "org.sinytra.forgified-fabric-api"
+        }
+    }
+
+    // JitPack — Numismatic Overhaul Fabric jar (used as a compile-time stub only)
+    // The actual jar must also be placed in your mods folder for Connector to load.
+    maven {
+        name = "JitPack"
+        url  = "https://jitpack.io"
+    }
+
+    // CurseMaven — fallback if JitPack cannot resolve Numismatic
+    maven { url = "https://www.cursemaven.com" }
+}
+
+// ---------------------------------------------------------------------------
+//  Dependencies
+// ---------------------------------------------------------------------------
+dependencies {
+    // NeoForge
+    implementation "net.neoforged:neoforge:1.21.1-21.1.172"
+
+    // ── Waystones (NeoForge build) ───────────────────────────────────────────
+    // Check latest at: https://maven.twelveiterations.com/.../waystones-neoforge/
+    implementation "net.blay09.mods:waystones-neoforge:21.1.3"
+    implementation "net.blay09.mods:balm-neoforge:21.1.1"
+
+    // ── Sinytra Connector + Forgified Fabric API (needed at dev runtime) ─────
+    // These are NOT compile-time dependencies of our mod; they are present so
+    // the dev run environment can load the Numismatic Fabric jar.
+    runtimeOnly "org.sinytra:connector:1.0.0-beta.46+1.21.1"
+    runtimeOnly "org.sinytra.forgified-fabric-api:forgified-fabric-api:0.103.0+1.3.3+1.21.1"
+
+    // ── Numismatic Overhaul (Fabric jar, compile stub + runtime via Connector) ─
+    //
+    // We compile against the Fabric jar so the IDE knows the class names exist.
+    // At compile time only the class structure matters; Connector provides the
+    // real implementation at runtime.
+    //
+    // Option 1 — JitPack (preferred, resolves directly from GitHub tag):
+    //   compileOnly "com.github.wisp-forest:numismatic-overhaul:0.3.5+1.21"
+    //
+    // Option 2 — Local file (most reliable; download the jar from Modrinth/CurseForge):
+    //   compileOnly files('libs/numismatic-overhaul-0.3.5+1.21.jar')
+    //   runtimeOnly files('libs/numismatic-overhaul-0.3.5+1.21.jar')
+    //
+    // Option 3 — CurseMaven (replace file id as needed):
+    //   compileOnly "curse.maven:numismatic-overhaul-430068:<FILE_ID>"
+    //
+    // Default: compileOnly via JitPack.  Switch to local file if JitPack fails.
+    compileOnly "com.github.wisp-forest:numismatic-overhaul:0.3.5+1.21"
+
+    // oωo-lib is a required dependency of Numismatic Overhaul (Fabric, via Connector)
+    // It must be present in the mods folder at runtime. For compilation we only
+    // need it if we add direct oωo API calls (we don't — we use reflection only).
+    // runtimeOnly "io.wispforest:owo-lib:0.12.15+1.21"
+}
+
+// ---------------------------------------------------------------------------
+//  Jar manifest
+// ---------------------------------------------------------------------------
+jar {
+    manifest {
+        attributes([
+            "Specification-Title"   : "waystonecoins",
+            "Specification-Vendor"  : "YourNameHere",
+            "Specification-Version" : "1",
+            "Implementation-Title"  : project.name,
+            "Implementation-Version": project.version,
+            "Implementation-Vendor" : "YourNameHere",
+        ])
+    }
+}

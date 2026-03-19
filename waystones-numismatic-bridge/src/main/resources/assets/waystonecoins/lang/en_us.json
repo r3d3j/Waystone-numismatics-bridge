@@ -1,0 +1,5 @@
+{
+  "waystonecoins.not_enough_coins": "Not enough coins! Need %s bronze (%s) — you have %s.",
+  "waystonecoins.coins_charged":    "Waystone: charged %s bronze (%s) from your purse.",
+  "waystonecoins.cost_display":     "Cost: %s bronze (%s)"
+}

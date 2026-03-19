@@ -1,0 +1,68 @@
+modLoader="javafml"
+loaderVersion="[21,)"
+license="MIT"
+
+# ── Mod block ──────────────────────────────────────────────────────────────────
+[[mods]]
+    modId            = "waystonecoins"
+    version          = "1.0.0"
+    displayName      = "Waystones Coin Cost"
+    logoFile         = "waystonecoins.png"
+    description      = '''
+Replaces Waystones XP teleport costs with Numismatic Overhaul coins (gliscowo / wisp-forest).
+Requires Sinytra Connector to load the Fabric Numismatic Overhaul jar on NeoForge.
+'''
+    authors          = "YourNameHere"
+    displayURL       = ""
+    updateJSONURL    = ""
+
+# ── Dependencies ───────────────────────────────────────────────────────────────
+
+[[dependencies.waystonecoins]]
+    # NeoForge itself
+    modId        = "neoforge"
+    type         = "required"
+    versionRange = "[21.1,)"
+    ordering     = "NONE"
+    side         = "SERVER"
+
+[[dependencies.waystonecoins]]
+    # Waystones (NeoForge build)
+    modId        = "waystones"
+    type         = "required"
+    versionRange = "[21.1,)"
+    ordering     = "AFTER"
+    side         = "SERVER"
+
+[[dependencies.waystonecoins]]
+    # Balm — required by Waystones
+    modId        = "balm"
+    type         = "required"
+    versionRange = "[*,)"
+    ordering     = "AFTER"
+    side         = "SERVER"
+
+[[dependencies.waystonecoins]]
+    # Sinytra Connector — loads Numismatic Overhaul (Fabric jar) into NeoForge
+    modId        = "connector"
+    type         = "required"
+    versionRange = "[*,)"
+    ordering     = "BEFORE"
+    side         = "SERVER"
+
+[[dependencies.waystonecoins]]
+    # Numismatic Overhaul (Fabric jar loaded via Connector)
+    # The modId of the Fabric jar is "numismatic-overhaul" (with a hyphen)
+    modId        = "numismatic-overhaul"
+    type         = "required"
+    versionRange = "[0.3.5,)"
+    ordering     = "AFTER"
+    side         = "SERVER"
+
+[[dependencies.waystonecoins]]
+    # Minecraft itself
+    modId        = "minecraft"
+    type         = "required"
+    versionRange = "[1.21.1,1.22)"
+    ordering     = "NONE"
+    side         = "SERVER"
